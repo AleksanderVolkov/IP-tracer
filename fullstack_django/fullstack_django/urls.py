@@ -22,9 +22,9 @@ from backend_api.views import *
 urlpatterns = [
     path('admin/', admin.site.urls),
     #path('', YouTubeVideoView.as_view(), name = 'oh shit'),
-    path('Get_answer_by_IP', Get_answer_by_IP.as_view()),
-    path('Valid_IP_or_DNS', Valid_IP_or_DNS.as_view()),
-    path('IP_or_DNS_informathion', IP_or_DNS_informathion.as_view())
+    path('CheckHistory', CheckHistory.as_view()),
+    path('GetRequestIP_DNS', GetRequestIP_DNS.as_view()),
+    #path('IP_or_DNS_informathion', IP_or_DNS_informathion.as_view())
 ]
 
 

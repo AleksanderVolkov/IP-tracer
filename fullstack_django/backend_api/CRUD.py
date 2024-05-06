@@ -1,37 +1,40 @@
 import sqlite3
 
 def read_data_base():
-    connection = sqlite3.connect("our_data_base.bd")
+    connection = sqlite3.connect("IP.bd")
     cursor = connection.cursor()
-    cursor.execute("SELECT * FROM our_data_base")
+    cursor.execute("SELECT IPorLink FROM IP")
     frames = cursor.fetchall()
     connection.close()
+    #answer = []
     for frame in frames:
-        print(f"id: {frame[0]}, text: {frame[1]}")
+        #answer.append(frame)
+        print(f"IPorLink: {frame}")
+    #return answer
 
 def create_data_base():
-    connection = sqlite3.connect("our_data_base.db")
+    connection = sqlite3.connect("IP.db")
     cursor = connection.cursor()
     cursor.execute('''
-        CREATE TABLE IF NOT EXISTS our_data_base (
-        id INTEGER PRIMARY KEY,
-        text TEXT
+        CREATE TABLE IF NOT EXISTS IP (
+        id TEXT PRIMARY KEY,
+        IPorLink TEXT
         )
     ''')
     connection.commit()
     connection.close()
 
-def append_data(ip):
-    connection = sqlite3.connect("our_data_base.db")
+def append_data(ip_dns):
+    connection = sqlite3.connect("IP.db")
     cursor = connection.cursor()
-    cursor.execute('INSERT INTO our_data_base (text) VALUES (?)', (ip))
+    cursor.execute('INSERT INTO IP (IPorLink) VALUES (?)', (ip_dns,))
     connection.commit()
     connection.close()
 
 def delete_line():
-    connection = sqlite3.connect("our_data_base.db")
+    connection = sqlite3.connect("IP.db")
     cursor = connection.cursor()
-    cursor.execute("DELETE from our_data_base where id = (SELECT MAX(id) FROM our_data_base)")
+    cursor.execute("DELETE from IP where id = (SELECT MAX(id) FROM IP)")
     connection.commit()
 
 if __name__ == "__main__":
