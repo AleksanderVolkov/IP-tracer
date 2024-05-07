@@ -15,10 +15,19 @@ class CheckHistory(APIView):
     
     def post(self, request):
         try:
-            database = read_data_base()
-            return Response({database}) # МБ надо переделывать в json формат
+            CheckHistory.check_lenth() 
+            database = DataBase.read_data_base() 
+            return Response({"result": database}) # МБ надо переделывать в json формат
         except:
             return Response({'Ошибка кода в функции "post" класса "CheckHistory"'})
+    
+    def check_lenth(self):
+        count = DataBase.count_rows
+        n = 10
+        if(count > n):
+            for _ in range(count - n): DataBase.delete_line()
+
+
 
 # Обработка запроса на поиск по IP/DNS
 class GetRequestIP_DNS(APIView):
@@ -28,7 +37,8 @@ class GetRequestIP_DNS(APIView):
     def post(self, request):
         try:
             answer = Valid_IP_or_DNS().check_request(request)
-            return Response({answer})
+            # либо верну словарь с ответом либо верну строку в которой описана ошибка
+            return Response({"result": answer}) # МБ надо переделывать в json формат и возможно не нужен "result:"
         except:
             return Response({'Ошибка кода в функции "post" класса "IP_or_DNS_informathion"'})
 
@@ -128,18 +138,34 @@ class Get_answer_by_IP(APIView):
 class Valid_IP_or_DNS(APIView):
     def check_request(req):
         if(req[0].isdigit()):
-            append_data(req) # Записываем в историю (БД)
+            DataBase.append_data(req) # Записываем в историю (БД)
             data = Get_answer_by_IP().get_info_by_ip(req)
             return data
         else:
-            try:
-                req = urlparse(req).netloc  # Удалить https// и всё остальное в ссылке кроме доменного имени
-                ip_by_dns = socket.gethostbyname(req) # Получаем IP по доменному имени
-                append_data(ip_by_dns) # Записываем в историю (БД)
-                data = Get_answer_by_IP().get_info_by_ip(ip_by_dns)
+            try: # возможно try/except не нужен
+                # [!][!][!] Типа проверка доменного имени  [!][!][!]
+                ip_by_dns_or_error = Valid_IP_or_DNS.DNS_or_URL(req) # получаю IP из ссылки или доменного имени, при не удачи возвращаю "error"
+
+                if ip_by_dns_or_error == 'error': return "Error of DNS name. This name not found"
+                
+                data = Get_answer_by_IP().get_info_by_ip(ip_by_dns_or_error)
+                DataBase.append_data(ip_by_dns_or_error) # Записываем в историю (БД)
                 return data
             except socket.gaierror as error: # Переделать в возврат результата "NOT FOUND"
                 print(f'[!] Invalid Hostname [!] - {error}')
+
+    def DNS_or_URL(text):
+        # проверка на доменное имя или ссылку
+        if urlparse(text).netloc != '':
+            text = urlparse(text).netloc  # Удалить https// и всё остальное в ссылке кроме доменного имени        
+        else:
+            text = "http://" + text
+            text = urlparse(text).netloc
+
+        try:
+            ip = socket.gethostbyname(text) # Получаем IP по доменному имени
+            return ip
+        except: return "error"
 
 
 
