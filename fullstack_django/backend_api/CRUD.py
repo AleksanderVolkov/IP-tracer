@@ -1,7 +1,7 @@
 import sqlite3
 
 def read_data_base():
-    connection = sqlite3.connect("IP.bd")
+    connection = sqlite3.connect("IP.db")
     cursor = connection.cursor()
     cursor.execute("SELECT IPorLink FROM IP")
     frames = cursor.fetchall()
