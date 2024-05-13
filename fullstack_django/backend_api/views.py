@@ -36,6 +36,7 @@ class GetRequestIP_DNS(APIView):
     
     def post(self, request):
         try:
+            json.dumps(request)
             answer = Valid_IP_or_DNS().check_request(request)
             # либо верну словарь с ответом либо верну строку в которой описана ошибка
             return Response({json.dump(answer)}) # МБ надо переделывать в json формат и возможно не нужен "result:"
@@ -52,7 +53,7 @@ class Get_answer_by_IP(APIView):
             data1 = {
             '[IP]': response.get('ip'), # не хвтает континента
             '[Country]': response.get('country'),
-            '[Region Name]': response.get('region'),
+            '[RegionName]': response.get('region'),
             '[City]': response.get('city'),
             '[Lat]': response.get('latitude'), # широта
             '[Lon]': response.get('longitude'), # долгота
@@ -62,7 +63,7 @@ class Get_answer_by_IP(APIView):
             data_error = {
             '[IP]': '0', # не хвтает континента
             '[Country]': '0',
-            '[Region Name]': '0',
+            '[RegionName]': '0',
             '[City]': '0',
             '[Lat]': '0', # широта
             '[Lon]': '0', # долгота
@@ -79,7 +80,7 @@ class Get_answer_by_IP(APIView):
             data2 = {
             '[IP]': response.get('ipAddress'), # не хвтает континента
             '[Country]': response.get('countryName'),
-            '[Region Name]': response.get('regionName'),
+            '[RegionName]': response.get('regionName'),
             '[City]': response.get('cityName'),
             '[Lat]': response.get('latitude'), # широта
             '[Lon]': response.get('latitude'), # долгота
@@ -89,7 +90,7 @@ class Get_answer_by_IP(APIView):
             data_error = {
             '[IP]': '0', # не хвтает континента
             '[Country]': '0',
-            '[Region Name]': '0',
+            '[RegionName]': '0',
             '[City]': '0',
             '[Lat]': '0', # широта
             '[Lon]': '0', # долгота
@@ -104,7 +105,7 @@ class Get_answer_by_IP(APIView):
             data3 = {
             '[IP]': response.get('ip'), # не хвтает континента
             '[Country]': response.get('country_name'),
-            '[Region Name]': response.get('region_name'),
+            '[RegionName]': response.get('region_name'),
             '[City]': response.get('city_name'),
             '[Lat]': response.get('latitude'), # широта
             '[Lon]': response.get('longitude'), # долгота
@@ -114,7 +115,7 @@ class Get_answer_by_IP(APIView):
             data_error = {
             '[IP]': '0', # не хвтает континента
             '[Country]': '0',
-            '[Region Name]': '0',
+            '[RegionName]': '0',
             '[City]': '0',
             '[Lat]': '0', # широта
             '[Lon]': '0', # долгота
