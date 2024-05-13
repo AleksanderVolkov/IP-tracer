@@ -2,7 +2,7 @@ import json
 import socket
 import requests
 import folium  # карта
-from .CRUD import *
+#from .CRUD import *
 from urllib.parse import urlparse
 from pyfiglet import Figlet  # для красивого превью в терминале
 from rest_framework.response import Response
@@ -174,14 +174,14 @@ def get_info_by_ip(self, ip):
 #         get_info_by_dns(req)
 def check_request(req):
         if(req[0].isdigit()):
-            append_data(req)
+            #append_data(req)
             data = get_info_by_ip(req)
             return data
         else:
             try:
                 req = urlparse(req).netloc  # Удалить https// и всё остальное в ссылке кроме доменного имени
                 ip_by_dns = socket.gethostbyname(req) # Получаем IP по доменному имени
-                append_data(ip_by_dns)
+                #append_data(ip_by_dns)
                 data = get_info_by_ip(ip_by_dns)
                 return data
             except socket.gaierror as error: # Переделать в возврат результата "NOT FOUND"
@@ -189,19 +189,13 @@ def check_request(req):
 
 def main():
     # Участок с принятием запроса
-    # preview_text = Figlet(font='slant') # для красивого превью в терминале
-    # print(preview_text.renderText('IP INFO'))
-    request = Response({})
-
-    try:
-        answer = check_request(request)
-        return Response({answer})
-    except:
-        return Response({'Ошибка кода в функции "post" класса "IP_or_DNS_informathion"'})
+    preview_text = Figlet(font='slant') # для красивого превью в терминале
+    print(preview_text.renderText('IP INFO'))
+    
 
     # Сохранение запроса и передача его на проверку/определение типа запроса
-    # request = input('Enter IP or http: ')
-    # check_request(request)
+    request = input('Enter IP or http: ')
+    print(check_request(request))
 
     # Старое временное решение
     # ip = input('Enter IP adress: ')

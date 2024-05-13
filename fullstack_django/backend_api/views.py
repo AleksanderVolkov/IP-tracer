@@ -38,9 +38,9 @@ class GetRequestIP_DNS(APIView):
         try:
             answer = Valid_IP_or_DNS().check_request(request)
             # либо верну словарь с ответом либо верну строку в которой описана ошибка
-            return Response({"result": answer}) # МБ надо переделывать в json формат и возможно не нужен "result:"
+            return Response({json.dump(answer)}) # МБ надо переделывать в json формат и возможно не нужен "result:"
         except:
-            return Response({'Ошибка кода в функции "post" класса "IP_or_DNS_informathion"'})
+            return Response({'Ошибка кода в функции "post" класса "IP_or_DNS_informathion"'}) # 0
 
 
 # Поиск поиск данных по IP и упаковка в один словарь
@@ -134,6 +134,7 @@ class Get_answer_by_IP(APIView):
             result_data[key].append(data3[key])
         return result_data
 
+
 # Проверка валидности IP или DNS
 class Valid_IP_or_DNS(APIView):
     def check_request(req):
@@ -146,7 +147,7 @@ class Valid_IP_or_DNS(APIView):
                 # [!][!][!] Типа проверка доменного имени  [!][!][!]
                 ip_by_dns_or_error = Valid_IP_or_DNS.DNS_or_URL(req) # получаю IP из ссылки или доменного имени, при не удачи возвращаю "error"
 
-                if ip_by_dns_or_error == 'error': return "Error of DNS name. This name not found"
+                if ip_by_dns_or_error == 'error': return "Error of DNS name. This name not found" # 1
                 
                 data = Get_answer_by_IP().get_info_by_ip(ip_by_dns_or_error)
                 DataBase.append_data(ip_by_dns_or_error) # Записываем в историю (БД)
